@@ -32,15 +32,18 @@ class KGDataset(object):
         self.to_skip = pkl.load(filters_file)
         filters_file.close()
 
-        # Added by Xu: Open ranked_examples.pickle 
+        # Added by Xu: Open ranked_examples.pickle, for descending sampling; 
+        # or "ascending_ranked_examples.pickle", for ascending sampling
         ranked_examples_file = os.path.join(self.data_path, "ranked_examples.pickle")
         with open(ranked_examples_file, "rb") as ranked_file:
             self.ranked_examples_array = pkl.load(ranked_file)
         
-        # Added by Xu: Open probabilities.pt
+        # Added by Xu: Open probabilities.pt, for descending sampling;
+        # or "ascending_probabilities_tensor.pt", for ascending sampling
         probabilities_file = os.path.join(self.data_path, "probabilities_tensor.pt")
         self.probabilities = torch.load(probabilities_file)
         
+        # For curriculum learning and adaptive learning, these two files do not exist. 
 
         max_axis = np.max(self.data["train"], axis=0)
         self.n_entities = int(max(max_axis[0], max_axis[2]) + 1)
